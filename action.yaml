@@ -30,6 +30,10 @@ inputs:
     required: false
     default: 'false'
     description: Update chart dependencies before packaging (Default 'false')
+  dry_run:
+    required: false
+    default: 'false'
+    description: Perform a dry run (Default 'false')
 outputs:
   image:
     value: ${{ steps.output.outputs.image }}
@@ -59,6 +63,7 @@ runs:
     - name: Helm | Push
       shell: bash
       run: helm push ${{ inputs.name }}-${{ inputs.tag }}.tgz oci://${{ inputs.registry }}/${{ inputs.repository }}
+      if: ${{ inputs.dry_run }} != 'true'
       env:
         HELM_EXPERIMENTAL_OCI: '1'
 
